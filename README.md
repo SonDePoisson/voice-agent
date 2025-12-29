@@ -1,11 +1,11 @@
-# voice-agent
+# fastrtc-voice-agent
 
 A modular voice agent built on [FastRTC](https://github.com/gradio-app/fastrtc)
 
 ## Installation
 
 ```bash
-uv add "voice-agent @ git+https://github.com/SonDePoisson/voice-agent"
+pip install fastrtc-voice-agent
 ```
 
 ## Example

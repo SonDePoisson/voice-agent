@@ -1,5 +1,5 @@
 [project]
-name = "voice-agent"
+name = "fastrtc-voice-agent"
 version = "0.1.0"
 description = "A modular voice agent with swappable STT/TTS/LLM backends"
 readme = "README.md"
@@ -34,7 +34,7 @@ edge-tts = ["edge-tts>=7.2.7", "pydub>=0.25.1"]
 ollama = ["ollama>=0.6.1"]
 fastrtc = ["fastrtc[vad]>=0.0.34"]
 all = [
-    "voice-agent[whisper,faster-whisper,edge-tts,ollama,fastrtc]",
+    "fastrtc-voice-agent[whisper,faster-whisper,edge-tts,ollama,fastrtc]",
 ]
 
 [project.urls]

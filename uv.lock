@@ -685,6 +685,83 @@ vad = [
 ]
 
 [[package]]
+name = "fastrtc-voice-agent"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "edge-tts" },
+    { name = "faster-whisper" },
+    { name = "fastrtc", extra = ["vad"] },
+    { name = "librosa" },
+    { name = "numpy" },
+    { name = "ollama" },
+    { name = "pip" },
+    { name = "pydub" },
+    { name = "twine" },
+]
+
+[package.optional-dependencies]
+all = [
+    { name = "edge-tts" },
+    { name = "faster-whisper" },
+    { name = "fastrtc", extra = ["vad"] },
+    { name = "ollama" },
+    { name = "openai-whisper" },
+    { name = "pydub" },
+]
+edge-tts = [
+    { name = "edge-tts" },
+    { name = "pydub" },
+]
+faster-whisper = [
+    { name = "faster-whisper" },
+]
+fastrtc = [
+    { name = "fastrtc", extra = ["vad"] },
+]
+ollama = [
+    { name = "ollama" },
+]
+whisper = [
+    { name = "openai-whisper" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "edge-tts", specifier = ">=7.2.7" },
+    { name = "edge-tts", marker = "extra == 'edge-tts'", specifier = ">=7.2.7" },
+    { name = "faster-whisper", specifier = ">=1.2.1" },
+    { name = "faster-whisper", marker = "extra == 'faster-whisper'", specifier = ">=1.2.1" },
+    { name = "fastrtc", extras = ["vad"], specifier = ">=0.0.34" },
+    { name = "fastrtc", extras = ["vad"], marker = "extra == 'fastrtc'", specifier = ">=0.0.34" },
+    { name = "fastrtc-voice-agent", extras = ["whisper", "faster-whisper", "edge-tts", "ollama", "fastrtc"], marker = "extra == 'all'" },
+    { name = "librosa", specifier = ">=0.10" },
+    { name = "numpy", specifier = ">=1.24" },
+    { name = "ollama", specifier = ">=0.6.1" },
+    { name = "ollama", marker = "extra == 'ollama'", specifier = ">=0.6.1" },
+    { name = "openai-whisper", marker = "extra == 'whisper'", specifier = ">=20250625" },
+    { name = "pip", specifier = ">=25.3" },
+    { name = "pydub", specifier = ">=0.25.1" },
+    { name = "pydub", marker = "extra == 'edge-tts'", specifier = ">=0.25.1" },
+    { name = "twine", specifier = ">=6.2.0" },
+]
+provides-extras = ["whisper", "faster-whisper", "edge-tts", "ollama", "fastrtc", "all"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy", specifier = ">=1.0" },
+    { name = "pytest", specifier = ">=7.0" },
+    { name = "ruff", specifier = ">=0.1.0" },
+]
+
+[[package]]
 name = "ffmpy"
 version = "1.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -3085,83 +3162,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c3/d1/8f3c683c9561a4e6689dd3b1d345c815f10f86acd044ee1fb9a4dcd0b8c5/uvicorn-0.40.0.tar.gz", hash = "sha256:839676675e87e73694518b5574fd0f24c9d97b46bea16df7b8c05ea1a51071ea", size = 81761, upload-time = "2025-12-21T14:16:22.45Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3d/d8/2083a1daa7439a66f3a48589a57d576aa117726762618f6bb09fe3798796/uvicorn-0.40.0-py3-none-any.whl", hash = "sha256:c6c8f55bc8bf13eb6fa9ff87ad62308bbbc33d0b67f84293151efe87e0d5f2ee", size = 68502, upload-time = "2025-12-21T14:16:21.041Z" },
-]
-
-[[package]]
-name = "voice-agent"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "edge-tts" },
-    { name = "faster-whisper" },
-    { name = "fastrtc", extra = ["vad"] },
-    { name = "librosa" },
-    { name = "numpy" },
-    { name = "ollama" },
-    { name = "pip" },
-    { name = "pydub" },
-    { name = "twine" },
-]
-
-[package.optional-dependencies]
-all = [
-    { name = "edge-tts" },
-    { name = "faster-whisper" },
-    { name = "fastrtc", extra = ["vad"] },
-    { name = "ollama" },
-    { name = "openai-whisper" },
-    { name = "pydub" },
-]
-edge-tts = [
-    { name = "edge-tts" },
-    { name = "pydub" },
-]
-faster-whisper = [
-    { name = "faster-whisper" },
-]
-fastrtc = [
-    { name = "fastrtc", extra = ["vad"] },
-]
-ollama = [
-    { name = "ollama" },
-]
-whisper = [
-    { name = "openai-whisper" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "mypy" },
-    { name = "pytest" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "edge-tts", specifier = ">=7.2.7" },
-    { name = "edge-tts", marker = "extra == 'edge-tts'", specifier = ">=7.2.7" },
-    { name = "faster-whisper", specifier = ">=1.2.1" },
-    { name = "faster-whisper", marker = "extra == 'faster-whisper'", specifier = ">=1.2.1" },
-    { name = "fastrtc", extras = ["vad"], specifier = ">=0.0.34" },
-    { name = "fastrtc", extras = ["vad"], marker = "extra == 'fastrtc'", specifier = ">=0.0.34" },
-    { name = "librosa", specifier = ">=0.10" },
-    { name = "numpy", specifier = ">=1.24" },
-    { name = "ollama", specifier = ">=0.6.1" },
-    { name = "ollama", marker = "extra == 'ollama'", specifier = ">=0.6.1" },
-    { name = "openai-whisper", marker = "extra == 'whisper'", specifier = ">=20250625" },
-    { name = "pip", specifier = ">=25.3" },
-    { name = "pydub", specifier = ">=0.25.1" },
-    { name = "pydub", marker = "extra == 'edge-tts'", specifier = ">=0.25.1" },
-    { name = "twine", specifier = ">=6.2.0" },
-    { name = "voice-agent", extras = ["whisper", "faster-whisper", "edge-tts", "ollama", "fastrtc"], marker = "extra == 'all'" },
-]
-provides-extras = ["whisper", "faster-whisper", "edge-tts", "ollama", "fastrtc", "all"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "mypy", specifier = ">=1.0" },
-    { name = "pytest", specifier = ">=7.0" },
-    { name = "ruff", specifier = ">=0.1.0" },
 ]
 
 [[package]]
