@@ -1,21 +1,25 @@
 [project]
-name = "fastrtcvoiceagent"
+name = "voice-agent"
 version = "0.1.0"
-description = "Add your description here"
+description = "A modular voice agent with swappable STT/TTS/LLM backends"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "edge-tts>=7.2.7",
     "faster-whisper>=1.2.1",
     "fastrtc[vad]>=0.0.34",
-    "kokoro-onnx>=0.4.9",
+    "librosa>=0.10",
+    "numpy>=1.24",
     "ollama>=0.6.1",
     "openai-whisper>=20250625",
     "pydub>=0.25.1",
-    "typer>=0.21.0",
 ]
 
 [dependency-groups]
 dev = [
-    "typer>=0.21.0",
+    "pytest>=7.0",
+    "mypy>=1.0",
 ]
+
+[tool.uv.sources]
+voice-agent = { path = "src" }
