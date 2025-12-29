@@ -1,7 +1,28 @@
 """voice_agent - A modular voice agent with swappable STT/TTS/LLM backends."""
 
 from .core import VoiceAgent, AudioData, ConversationMessage
-from .config import AgentConfig, STTConfig, TTSConfig, LLMConfig
+from .config import (
+    AgentConfig,
+    STTConfig,
+    TTSConfig,
+    LLMConfig,
+    # Backend type aliases
+    STTBackendType,
+    TTSBackendType,
+    LLMBackendType,
+    # Parameter type aliases
+    WhisperModelSize,
+    DeviceType,
+    ClaudeModel,
+    EdgeVoice,
+    # Discovery functions
+    list_stt_backends,
+    list_tts_backends,
+    list_llm_backends,
+    get_stt_defaults,
+    get_tts_defaults,
+    get_llm_defaults,
+)
 from .stt import create_stt_backend, STTBackend
 from .tts import create_tts_backend, TTSBackend
 from .llm import create_llm_backend, LLMBackend
@@ -47,6 +68,22 @@ __all__ = [
     "STTConfig",
     "TTSConfig",
     "LLMConfig",
+    # Backend type aliases
+    "STTBackendType",
+    "TTSBackendType",
+    "LLMBackendType",
+    # Parameter type aliases
+    "WhisperModelSize",
+    "DeviceType",
+    "ClaudeModel",
+    "EdgeVoice",
+    # Discovery functions
+    "list_stt_backends",
+    "list_tts_backends",
+    "list_llm_backends",
+    "get_stt_defaults",
+    "get_tts_defaults",
+    "get_llm_defaults",
     # Backends
     "STTBackend",
     "TTSBackend",

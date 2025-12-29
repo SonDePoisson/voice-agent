@@ -76,19 +76,22 @@ class FasterWhisperSTTBackend(STTBackend):
 
 def create_stt_backend(
     backend: str = "faster_whisper",
-    model_size: str = "small",
-    device: str = "cpu",
+    model_size: str | None = None,
+    device: str | None = None,
 ) -> STTBackend:
     """Factory function to create an STT backend.
 
     Args:
         backend: Backend type ("whisper" or "faster_whisper")
-        model_size: Model size (e.g., "tiny", "small", "medium", "large")
-        device: Device to run on ("cpu" or "cuda")
+        model_size: Model size (e.g., "tiny", "small", "medium", "large"). Defaults to "small".
+        device: Device to run on ("cpu" or "cuda"). Defaults to "cpu".
 
     Returns:
         Configured STT backend instance
     """
+    model_size = model_size or "small"
+    device = device or "cpu"
+
     if backend == "whisper":
         return WhisperSTTBackend(model_size=model_size, device=device)
     elif backend == "faster_whisper":

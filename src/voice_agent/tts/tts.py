@@ -137,17 +137,19 @@ class EdgeTTSBackend(TTSBackend):
 
 def create_tts_backend(
     backend: str = "edge",
-    voice: str = "en-US-AvaMultilingualNeural",
+    voice: str | None = None,
 ) -> TTSBackend:
     """Factory function to create a TTS backend.
 
     Args:
         backend: Backend type ("edge" for now)
-        voice: Voice identifier
+        voice: Voice identifier. Defaults to "en-US-AvaMultilingualNeural".
 
     Returns:
         Configured TTS backend instance
     """
+    voice = voice or "en-US-AvaMultilingualNeural"
+
     if backend == "edge":
         return EdgeTTSBackend(voice=voice)
     else:
