@@ -16,6 +16,11 @@ from dataclasses import dataclass
 STT_MODEL = "small"
 OLLAMA_MODEL = "llama3.2:3b"
 TTS_VOICE = "en-US-AvaMultilingualNeural"
+SYSTEM_PROMPT_FILE = "system_prompt.txt"
+
+# Load system prompt
+with open(SYSTEM_PROMPT_FILE, "r") as f:
+    SYSTEM_PROMPT = f.read().strip()
 
 
 class WhisperSTTModel:
@@ -159,7 +164,12 @@ def response(audio: tuple[int, np.ndarray]):
     print(f"User: {user_prompt}")
 
     # Stream Ollama response and TTS sentence by sentence
-    text_stream = ollama.generate(model=OLLAMA_MODEL, prompt=user_prompt, stream=True)
+    text_stream = ollama.generate(
+        model=OLLAMA_MODEL,
+        system=SYSTEM_PROMPT,
+        prompt=user_prompt,
+        stream=True,
+    )
 
     print("Assistant: ", end="", flush=True)
     for sentence in stream_sentences(text_stream):
