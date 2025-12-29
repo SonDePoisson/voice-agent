@@ -23,6 +23,8 @@ dependencies = [
     "faster-whisper>=1.2.1",
     "ollama>=0.6.1",
     "fastrtc[vad]>=0.0.34",
+    "pip>=25.3",
+    "twine>=6.2.0",
 ]
 
 [project.optional-dependencies]
