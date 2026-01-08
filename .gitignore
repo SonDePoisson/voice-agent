@@ -14,3 +14,9 @@ wheels/
 .env
 .claude
 .ruff_cache
+
+# Node.js
+node_modules/
+package-lock.json
+.vite/
+*.local
