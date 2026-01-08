@@ -4,19 +4,36 @@ A modular voice agent built on [FastRTC](https://github.com/gradio-app/fastrtc)
 
 ## Installation
 
+### Recommended: Using uv
+
+[uv](https://github.com/astral-sh/uv) is the recommended way to manage your Python environment and dependencies.
+
+```bash
+# Create a virtual environment with Python 3.12+
+uv venv --python 3.12
+
+# Activate the environment
+source .venv/bin/activate
+
+# Install the package
+uv add fastrtc-voice-agent
+
+# Install with optional dependencies (e.g., ollama)
+uv add "fastrtc-voice-agent[ollama]"
+
+# Or install all optional dependencies
+uv add "fastrtc-voice-agent[all]"
+```
+
+### Using pip
+
 ```bash
 pip install fastrtc-voice-agent
-```
 
-Please install your desired STT and LLM with (for example) :
-
-```bash
+# Install your desired STT and LLM with (for example):
 pip install "fastrtc-voice-agent[ollama]"
-```
 
-or for all optional dependancies :
-
-```bash
+# Or for all optional dependencies:
 pip install "fastrtc-voice-agent[all]"
 ```
 
@@ -113,16 +130,16 @@ See the [examples/react-client](examples/react-client) directory for a complete 
 Quick example:
 
 ```tsx
-import { useVoiceAgent } from './useVoiceAgent';
+import { useVoiceAgent } from "./useVoiceAgent";
 
 function App() {
   const { isConnected, connect, disconnect } = useVoiceAgent({
-    serverUrl: 'http://localhost:8000',
+    serverUrl: "http://localhost:8000",
   });
 
   return (
     <button onClick={isConnected ? disconnect : connect}>
-      {isConnected ? 'Stop' : 'Start'}
+      {isConnected ? "Stop" : "Start"}
     </button>
   );
 }
