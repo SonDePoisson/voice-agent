@@ -1,6 +1,6 @@
 [project]
 name = "fastrtc-voice-agent"
-version = "0.1.4"
+version = "0.1.5"
 description = "A modular voice agent with swappable STT/TTS/LLM backends"
 readme = "README.md"
 requires-python = ">=3.12"
