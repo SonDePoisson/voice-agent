@@ -56,13 +56,15 @@ class VoiceAgent:
         user_text = self.stt.transcribe(audio_data, sample_rate)
         print(f"User: {user_text}")
 
-        self.conversation_history.append(ConversationMessage(role="user", content=user_text))
-
-        # LLM: Generate response with streaming
+        # LLM: Generate response with streaming (pass history for context)
         text_stream = self.llm.stream_generate(
             prompt=user_text,
             system_prompt=self._system_prompt,
+            history=self.conversation_history,
         )
+
+        # Add user message to history after passing to LLM
+        self.conversation_history.append(ConversationMessage(role="user", content=user_text))
 
         # TTS: Convert response to speech, sentence by sentence
         print("Assistant: ", end="", flush=True)

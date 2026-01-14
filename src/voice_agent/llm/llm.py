@@ -3,11 +3,14 @@
 import os
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Callable, Generator
+from typing import TYPE_CHECKING, Any, Callable, Generator
 
 import anthropic
 import ollama as ollama_client
 from dotenv import load_dotenv
+
+if TYPE_CHECKING:
+    from ..core.types import ConversationMessage
 
 load_dotenv(Path(__file__).parents[3] / ".env")
 
@@ -20,12 +23,14 @@ class LLMBackend(ABC):
         self,
         prompt: str,
         system_prompt: str | None = None,
+        history: list["ConversationMessage"] | None = None,
     ) -> str:
         """Generate a complete response.
 
         Args:
             prompt: User prompt
             system_prompt: Optional system instructions
+            history: Optional conversation history for context
 
         Returns:
             Generated text response
@@ -37,12 +42,14 @@ class LLMBackend(ABC):
         self,
         prompt: str,
         system_prompt: str | None = None,
+        history: list["ConversationMessage"] | None = None,
     ) -> Generator:
         """Stream response tokens.
 
         Args:
             prompt: User prompt
             system_prompt: Optional system instructions
+            history: Optional conversation history for context
 
         Yields:
             Response chunks (with .response attribute)
@@ -66,31 +73,57 @@ class OllamaBackend(LLMBackend):
     def name(self) -> str:
         return f"ollama-{self.model}"
 
+    def _build_messages(
+        self,
+        prompt: str,
+        system_prompt: str | None = None,
+        history: list["ConversationMessage"] | None = None,
+    ) -> list[dict]:
+        """Build messages list from history and current prompt."""
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        if history:
+            for msg in history:
+                messages.append({"role": msg.role, "content": msg.content})
+        messages.append({"role": "user", "content": prompt})
+        return messages
+
     def generate(
         self,
         prompt: str,
         system_prompt: str | None = None,
+        history: list["ConversationMessage"] | None = None,
     ) -> str:
         """Generate a complete response."""
-        response = ollama_client.generate(
+        messages = self._build_messages(prompt, system_prompt, history)
+        response = ollama_client.chat(
             model=self.model,
-            prompt=prompt,
-            system=system_prompt,
+            messages=messages,
         )
-        return response.response
+        return response.message.content
 
     def stream_generate(
         self,
         prompt: str,
         system_prompt: str | None = None,
+        history: list["ConversationMessage"] | None = None,
     ) -> Generator:
         """Stream response tokens."""
-        return ollama_client.generate(
+        messages = self._build_messages(prompt, system_prompt, history)
+        for chunk in ollama_client.chat(
             model=self.model,
-            prompt=prompt,
-            system=system_prompt,
+            messages=messages,
             stream=True,
-        )
+        ):
+            yield _OllamaStreamChunk(chunk.message.content)
+
+
+class _OllamaStreamChunk:
+    """Wrapper to provide consistent interface for Ollama chat streaming."""
+
+    def __init__(self, text: str):
+        self.response = text
 
 
 class ClaudeBackend(LLMBackend):
@@ -126,17 +159,32 @@ class ClaudeBackend(LLMBackend):
     def name(self) -> str:
         return f"claude-{self.model}"
 
+    def _build_messages(
+        self,
+        prompt: str,
+        history: list["ConversationMessage"] | None = None,
+    ) -> list[dict]:
+        """Build messages list from history and current prompt."""
+        messages = []
+        if history:
+            for msg in history:
+                messages.append({"role": msg.role, "content": msg.content})
+        messages.append({"role": "user", "content": prompt})
+        return messages
+
     def generate(
         self,
         prompt: str,
         system_prompt: str | None = None,
+        history: list["ConversationMessage"] | None = None,
     ) -> str:
         """Generate a complete response."""
+        messages = self._build_messages(prompt, history)
         message = self.client.messages.create(
             model=self.model,
             max_tokens=1024,
             system=system_prompt or "",
-            messages=[{"role": "user", "content": prompt}],
+            messages=messages,
         )
         return message.content[0].text
 
@@ -144,6 +192,7 @@ class ClaudeBackend(LLMBackend):
         self,
         prompt: str,
         system_prompt: str | None = None,
+        history: list["ConversationMessage"] | None = None,
     ) -> Generator:
         """Stream response tokens with tool use support.
 
@@ -152,21 +201,22 @@ class ClaudeBackend(LLMBackend):
         2. If Claude uses a tool, execute it and send the result back
         3. Continue until Claude provides a final text response
         """
+        # Build messages with history
+        messages = self._build_messages(prompt, history)
+
         # If no tools configured, use simple streaming
         if not self.tools:
             with self.client.messages.stream(
                 model=self.model,
                 max_tokens=1024,
                 system=system_prompt or "",
-                messages=[{"role": "user", "content": prompt}],
+                messages=messages,
             ) as stream:
                 for text in stream.text_stream:
                     yield _ClaudeStreamChunk(text)
             return
 
         # Tool use flow
-        messages = [{"role": "user", "content": prompt}]
-
         for _ in range(self.max_tool_iterations):
             # Call Claude with tools
             response = self.client.messages.create(
